@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import axios from 'axios'
 
 const initialState = {
   posts: [],
@@ -29,16 +30,9 @@ export const createPost = createAsyncThunk(
   'post/create',
   async (payload, thunkAPI) => {
     try {
-      const data = await fetch('/memories/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-
-      const res = await data.json()
-      return res
+      const data = await axios.post('/memories/create', payload)
+      console.log(data.data)
+      return data.data
     } catch (e) {
       return thunkAPI.rejectWithValue(e)
     }
@@ -66,20 +60,12 @@ export const deletePost = createAsyncThunk(
 // edit post
 export const editPost = createAsyncThunk(
   'post/edit',
-  async (data, thunkAPI) => {
-    const { id } = data
+  async (payload, thunkAPI) => {
+    const { id, formDATA } = payload
     try {
-      const req = await fetch(`/memories/edit/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-
-      const res = await req.json()
-
-      return res
+      const data = await axios.put(`/memories/edit/${id}`, formDATA)
+      console.log(data.data)
+      return data.data
     } catch (e) {
       return thunkAPI.rejectWithValue(e)
     }

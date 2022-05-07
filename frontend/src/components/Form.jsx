@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@mui/material'
-import FileBase from 'react-file-base64'
 import { useDispatch, useSelector } from 'react-redux'
 import { createPost, editPost, formReset } from '../features/posts/postSlice'
 
@@ -30,15 +29,14 @@ export default function BasicTextFields() {
       return alert('Please include a file')
     }
 
-    dispatch(
-      createPost({
-        file,
-        creator,
-        title,
-        message,
-        tags,
-      })
-    )
+    const formDATA = new FormData()
+    formDATA.append('creator', creator)
+    formDATA.append('title', title)
+    formDATA.append('message', message)
+    formDATA.append('tags', tags)
+    formDATA.append('postImage', file, file.name)
+
+    dispatch(createPost(formDATA))
 
     setCreator('')
     setFile('')
@@ -54,16 +52,14 @@ export default function BasicTextFields() {
       return alert('Please include a file')
     }
 
-    dispatch(
-      editPost({
-        id,
-        creator,
-        title,
-        message,
-        tags,
-        file,
-      })
-    )
+    const formDATA = new FormData()
+    formDATA.append('creator', creator)
+    formDATA.append('title', title)
+    formDATA.append('message', message)
+    formDATA.append('tags', tags)
+    formDATA.append('postImage', file, file.name)
+
+    dispatch(editPost({ formDATA, id }))
 
     setCreator('')
     setFile('')
@@ -88,7 +84,7 @@ export default function BasicTextFields() {
     <div className="form_container">
       <h2 className="title">Create a memory</h2>
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} encType="multipart/form-data">
         <div className="form-control">
           <input
             value={creator}
@@ -125,10 +121,11 @@ export default function BasicTextFields() {
           />
         </div>
         <div className="form-control">
-          <FileBase
-            multiple={false}
-            onDone={({ base64 }) => setFile(base64)}
-            required
+          <label htmlFor="file">Please select a file</label>
+          <input
+            type="file"
+            filename="postImage"
+            onChange={(e) => setFile(e.target.files[0])}
           />
         </div>
         {!isEmpty ? (

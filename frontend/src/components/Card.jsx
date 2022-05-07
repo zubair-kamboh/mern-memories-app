@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
@@ -12,12 +12,7 @@ import moment from 'moment'
 import { Box } from '@mui/material'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import { useDispatch } from 'react-redux'
-import {
-  deletePost,
-  editPost,
-  formAction,
-  likePost,
-} from '../features/posts/postSlice'
+import { deletePost, formAction, likePost } from '../features/posts/postSlice'
 
 export default function RecipeReviewCard({ post }) {
   const dispatch = useDispatch()
@@ -46,7 +41,7 @@ export default function RecipeReviewCard({ post }) {
         }}
         component="img"
         height="194"
-        image={post.file}
+        image={`/uploads/${post.file}`}
         alt="Paella dish"
       />
       <CardContent>
