@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 const dbConnection = require('./config/db')
 const app = express()
 require('dotenv').config()
@@ -17,11 +18,14 @@ app.use(
 
 app.use('/memories', require('./routes/memoriesRoutes'))
 
-app.use(express.static('./build'))
-app.get('*', (req, res) => {
-  res.sendFile('./build/index.html')
-})
-
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, './build')))
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'build', 'index.html'))
+  )
+} else {
+  app.get('/', (req, res) => res.send('hello'))
+}
 // db connection
 dbConnection()
 
