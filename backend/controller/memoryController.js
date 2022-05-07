@@ -1,15 +1,23 @@
 const MemoriesModel = require('../model/memoriesModel')
+const { upload } = require('../server')
 
 // route /memories/create - post
 const createMemories = async (req, res) => {
-  const { creator, title, message, tags, file } = req.body
+  const { creator, title, message, tags } = req.body
 
-  if (!creator || !title || !message || !tags || !file) {
+  if (!creator || !title || !message || !tags || !req.file) {
     return res.status(400).json({ message: 'please input all fields' })
   }
 
   try {
-    const createdPost = await MemoriesModel.create(req.body)
+    const data = {
+      creator,
+      title,
+      message,
+      tags,
+      file: req.file.filename,
+    }
+    const createdPost = await MemoriesModel.create(data)
 
     if (createdPost) {
       res.status(201).json(createdPost)
@@ -35,16 +43,16 @@ const getMemories = async (req, res) => {
 // edit post
 const editMemories = async (req, res) => {
   const id = req.params.id
-  const { creator, title, message, tags, file } = req.body
+  const { creator, title, message, tags } = req.body
 
-  if (!creator || !title || !message || !tags || !file) {
+  if (!creator || !title || !message || !tags || !req.file) {
     return res.status(400).send(new Error('please input all fields'))
   }
 
   try {
     const editedPost = await MemoriesModel.findByIdAndUpdate(
       { _id: id },
-      req.body,
+      { creator, title, message, tags, file: req.file.filename },
       { new: true }
     )
     if (editedPost) {

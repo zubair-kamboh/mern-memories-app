@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.803099d0.css",
+    "main.js": "/static/js/main.8838690b.js",
+    "static/media/alex-gruber-ATMEDyTPQG4-unsplash.jpg": "/static/media/alex-gruber-ATMEDyTPQG4-unsplash.2c9c2c13cd1b69209574.jpg",
+    "index.html": "/index.html",
+    "main.803099d0.css.map": "/static/css/main.803099d0.css.map",
+    "main.8838690b.js.map": "/static/js/main.8838690b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.803099d0.css",
+    "static/js/main.8838690b.js"
+  ]
+}

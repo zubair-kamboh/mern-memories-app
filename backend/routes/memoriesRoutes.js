@@ -6,12 +6,28 @@ const {
   deleteMemories,
   likeMemory,
 } = require('../controller/memoryController')
+const path = require('path')
+const multer = require('multer')
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '../frontend/public/uploads')
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9)
+    const ext = file.originalname.split('.')[1]
+    cb(null, `${file.fieldname}-${uniqueSuffix}.${ext}`)
+  },
+})
+
+const upload = multer({ storage })
+
 const router = express.Router()
 
-router.get('/', (req, res) => getMemories(req, res))
-router.post('/create', (req, res) => createMemories(req, res))
-router.post('/like/:id', (req, res) => likeMemory(req, res))
-router.put('/edit/:id', (req, res) => editMemories(req, res))
-router.delete('/delete/:id', (req, res) => deleteMemories(req, res))
+router.get('/', getMemories)
+router.post('/create', upload.single('postImage'), createMemories)
+router.post('/like/:id', likeMemory)
+router.put('/edit/:id', upload.single('postImage'), editMemories)
+router.delete('/delete/:id', deleteMemories)
 
 module.exports = router

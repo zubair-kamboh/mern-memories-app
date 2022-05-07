@@ -1,7 +1,4 @@
 const express = require('express')
-const fs = require('fs')
-const mongoose = require('mongoose')
-const path = require('path')
 const dbConnection = require('./config/db')
 const app = express()
 require('dotenv').config()
@@ -19,6 +16,11 @@ app.use(
 )
 
 app.use('/memories', require('./routes/memoriesRoutes'))
+
+app.use(express.static('./build'))
+app.get('*', (req, res) => {
+  res.sendFile('./build/index.html')
+})
 
 // db connection
 dbConnection()
